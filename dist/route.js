@@ -1,5 +1,5 @@
-import { validateAssistantRequest } from './contracts';
-import { requestAssistant } from './server';
+import { validateAssistantRequest } from './contracts.js';
+import { requestAssistant } from './server.js';
 const MAX_BYTES = 16 * 1024;
 export function createAssistantRoute(config, options) {
     return async function POST(request) {

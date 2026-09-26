@@ -1,5 +1,5 @@
-import type { AssistantSiteConfig } from './contracts';
-import type { AssistantFetcher } from './server';
+import type { AssistantSiteConfig } from './contracts.js';
+import type { AssistantFetcher } from './server.js';
 export declare function createAssistantRoute(config: AssistantSiteConfig, options: {
     apiKey: string;
     fetcher?: AssistantFetcher;

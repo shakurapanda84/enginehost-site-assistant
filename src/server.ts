@@ -1,5 +1,5 @@
-import type { AssistantRequest, AssistantResponse, AssistantSiteConfig } from './contracts'
-import { validateAssistantResponse } from './contracts'
+import type { AssistantRequest, AssistantResponse, AssistantSiteConfig } from './contracts.js'
+import { validateAssistantResponse } from './contracts.js'
 
 export type AssistantFetcher = typeof fetch
 

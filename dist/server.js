@@ -1,4 +1,4 @@
-import { validateAssistantResponse } from './contracts';
+import { validateAssistantResponse } from './contracts.js';
 export async function requestAssistant(config, apiKey, input, fetcher = fetch) {
     try {
         const response = await fetcher(config.apiBaseUrl + '/api/public/' + config.slug + '/assistant', {

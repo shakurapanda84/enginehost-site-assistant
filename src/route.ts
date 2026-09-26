@@ -1,7 +1,7 @@
-import type { AssistantSiteConfig } from './contracts'
-import type { AssistantFetcher } from './server'
-import { validateAssistantRequest } from './contracts'
-import { requestAssistant } from './server'
+import type { AssistantSiteConfig } from './contracts.js'
+import type { AssistantFetcher } from './server.js'
+import { validateAssistantRequest } from './contracts.js'
+import { requestAssistant } from './server.js'
 
 const MAX_BYTES = 16 * 1024
 

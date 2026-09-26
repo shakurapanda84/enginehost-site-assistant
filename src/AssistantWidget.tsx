@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import type { AssistantSiteConfig } from './contracts'
+import type { AssistantSiteConfig } from './contracts.js'
 
 export function AssistantWidget({ config }: { config: AssistantSiteConfig }) {
   const [open, setOpen] = useState(false)
