@@ -38,7 +38,7 @@ export function createAssistantRoute(config, options) {
         const input = validateAssistantRequest(raw);
         if (!input.ok)
             return Response.json({ ok: false, code: 'invalid' }, { status: 400 });
-        if (!options.apiKey || !config.apiBaseUrl)
+        if (!options.apiKey || !config.apiBaseUrl || config.apiBaseUrl.startsWith('http://localhost'))
             return Response.json({ ok: false, code: 'unavailable' }, { status: 503 });
         const result = await requestAssistant(config, options.apiKey, input.value, options.fetcher);
         return result ? Response.json(result) : Response.json({ ok: false, code: 'unavailable' }, { status: 503 });

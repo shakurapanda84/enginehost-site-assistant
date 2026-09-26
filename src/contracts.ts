@@ -12,7 +12,7 @@ export function createSiteAssistantConfig(input: { slug: string; domain: string;
   const domain = new URL(input.domain.includes('://') ? input.domain : 'https://' + input.domain)
   if (domain.protocol !== 'https:') throw new Error('assistant domain must use HTTPS')
   const apiBaseUrl = new URL(input.apiBaseUrl)
-  if (apiBaseUrl.protocol !== 'https:') throw new Error('assistant API must use HTTPS')
+  if (apiBaseUrl.protocol !== 'https:' && !(apiBaseUrl.hostname === 'localhost' && apiBaseUrl.protocol === 'http:')) throw new Error('assistant API must use HTTPS')
   if (!/^[a-z0-9-]+$/.test(input.slug)) throw new Error('assistant slug is invalid')
   return { ...input, domain: 'https://' + domain.hostname.replace(/^www\./, ''), apiBaseUrl: apiBaseUrl.toString().replace(/\/$/, '') }
 }

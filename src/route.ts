@@ -29,7 +29,7 @@ export function createAssistantRoute(config: AssistantSiteConfig, options: { api
     } catch { return Response.json({ ok: false, code: 'invalid' }, { status: 400 }) }
     const input = validateAssistantRequest(raw)
     if (!input.ok) return Response.json({ ok: false, code: 'invalid' }, { status: 400 })
-    if (!options.apiKey || !config.apiBaseUrl) return Response.json({ ok: false, code: 'unavailable' }, { status: 503 })
+    if (!options.apiKey || !config.apiBaseUrl || config.apiBaseUrl.startsWith('http://localhost')) return Response.json({ ok: false, code: 'unavailable' }, { status: 503 })
     const result = await requestAssistant(config, options.apiKey, input.value, options.fetcher)
     return result ? Response.json(result) : Response.json({ ok: false, code: 'unavailable' }, { status: 503 })
   }
