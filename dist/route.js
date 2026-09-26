@@ -8,20 +8,39 @@ export function createAssistantRoute(config, options) {
             return Response.json({ code: 'invalid' }, { status: 415 });
         const origin = request.headers.get('origin');
         if (origin && origin !== config.domain && origin !== config.domain.replace('https://', 'https://www.'))
-            return Response.json({ code: 'forbidden' }, { status: 403 });
+            return Response.json({ ok: false, code: 'forbidden' }, { status: 403 });
         if (Number(request.headers.get('content-length') ?? 0) > MAX_BYTES)
-            return Response.json({ code: 'invalid' }, { status: 400 });
+            return Response.json({ ok: false, code: 'invalid' }, { status: 400 });
         let raw;
         try {
-            raw = await request.json();
+            if (!request.body)
+                throw new Error('missing body');
+            const reader = request.body.getReader();
+            const decoder = new TextDecoder();
+            let text = '';
+            let bytes = 0;
+            while (true) {
+                const chunk = await reader.read();
+                if (chunk.done)
+                    break;
+                bytes += chunk.value.byteLength;
+                if (bytes > MAX_BYTES) {
+                    await reader.cancel();
+                    return Response.json({ ok: false, code: 'invalid' }, { status: 400 });
+                }
+                text += decoder.decode(chunk.value, { stream: true });
+            }
+            raw = JSON.parse(text + decoder.decode());
         }
         catch {
-            return Response.json({ code: 'invalid' }, { status: 400 });
+            return Response.json({ ok: false, code: 'invalid' }, { status: 400 });
         }
         const input = validateAssistantRequest(raw);
         if (!input.ok)
-            return Response.json({ code: 'invalid' }, { status: 400 });
+            return Response.json({ ok: false, code: 'invalid' }, { status: 400 });
+        if (!options.apiKey || !config.apiBaseUrl)
+            return Response.json({ ok: false, code: 'unavailable' }, { status: 503 });
         const result = await requestAssistant(config, options.apiKey, input.value, options.fetcher);
-        return result ? Response.json(result) : Response.json({ code: 'unavailable' }, { status: 503 });
+        return result ? Response.json(result) : Response.json({ ok: false, code: 'unavailable' }, { status: 503 });
     };
 }
